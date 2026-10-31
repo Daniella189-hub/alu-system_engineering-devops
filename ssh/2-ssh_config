@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+# this is doing something in the config document
+cp ~/.ssh/config 2-ssh_config
