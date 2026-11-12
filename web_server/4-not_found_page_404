@@ -1,13 +1,9 @@
 #!/usr/bin/env bash
 # Installs Nginx and configures a 301 redirect for /redirect_me
 
-sudo apt-get update -y
-sudo apt-get install -y nginx
 
 echo "Hello World!" | sudo tee /var/www/html/index.html > /dev/null
-
-sudo sed -i '/server_name _;/a location /xyz {\n return 404 "58acb50e-1a";\n }' /etc/nginx/sites-available/default
-
-sudo sed -i "/server_name _;/a location /xyzfoo {\n Ceci n'est pas une page;\n }" /etc/nginx/sites-available/default
+echo "Ceci n'est une page" | sudo tee /var/www/html/404.html > /dev/null 
+sudo sed -i "/server_name _;/a error_page 404 /404.html;\n location = /404.html {\n root /var/www/html;\n internal;\n }" /etc/nginx/sites-available/default
 
 sudo service nginx restart
