@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+# Installs and configures HAProxy to round-robin traffic between web-01 and web-02
+
+sudo apt-get update
+sudo apt-get install -y haproxy
+
+# Let the init script start HAProxy (needed on older Ubuntu versions)
+if [ -f /etc/default/haproxy ]; then
+    sudo sed -i 's/^ENABLED=.*/ENABLED=1/' /etc/default/haproxy
+fi
+
+# Add the config only once, so re-running the script doesn't duplicate it
+if ! grep -q "backend web_servers" /etc/haproxy/haproxy.cfg; then
+    sudo tee -a /etc/haproxy/haproxy.cfg > /dev/null << 'EOF'
+
+frontend http_front
+    bind *:80
+    mode http
+    default_backend web_servers
+
+backend web_servers
+    mode http
+    balance roundrobin
+    server 7338-web-01 35.178.184.225:80 check
+    server 7338-web-02 35.176.158.204:80 check
+EOF
+fi
+
+# Start now, and on every boot, using the init script
+sudo systemctl enable haproxy
+sudo service haproxy restart
