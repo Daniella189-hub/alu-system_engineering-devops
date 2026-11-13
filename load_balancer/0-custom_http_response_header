@@ -1,21 +1,10 @@
 #!/usr/bin/env bash
-# Configure Nginx to add an X-Served-By header with the server hostname
+# Configures Nginx to add an X-Served-By header with the server hostname
+# shellcheck disable=SC2154
 
-sudo tee /etc/nginx/sites-available/default > /dev/null << 'EOF'
-server {
-    listen 80 default_server;
-    listen [::]:80 default_server;
+apt-get update
+apt-get install -y nginx
 
-    root /var/www/html;
-    index index.html index.htm index.nginx-debian.html;
-    server_name _;
+echo 'add_header X-Served-By $hostname;' > /etc/nginx/conf.d/custom_header.conf
 
-    add_header X-Served-By $hostname;
-
-    location / {
-        try_files $uri $uri/ =404;
-    }
-}
-EOF
-
-sudo service nginx restart
+service nginx restart
