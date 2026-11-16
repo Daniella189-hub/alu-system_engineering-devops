@@ -1,0 +1,10 @@
+onfigures Nginx to run as the nginx user and listen on all active IPs on port 8080
+pkill apache2
+id nginx &>/dev/null || useradd -r -s /usr/sbin/nologin nginx
+sed -i '/^user /d' /etc/nginx/nginx.conf
+sed -i '1i user nginx;' /etc/nginx/nginx.conf
+sed -i -E 's/listen (\[::\]:)?80( |;)/listen \18080\2/' /etc/nginx/sites-enabled/*
+chmod 644 /etc/nginx/nginx.conf
+service nginx stop
+pkill -9 nginx
+service nginx start
