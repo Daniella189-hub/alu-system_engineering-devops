@@ -1,4 +1,6 @@
-onfigures Nginx to run as the nginx user and listen on all active IPs on port 8080
+#!/usr/bin/env bash 
+# this is the chage user for nginx
+
 pkill apache2
 id nginx &>/dev/null || useradd -r -s /usr/sbin/nologin nginx
 sed -i '/^user /d' /etc/nginx/nginx.conf
