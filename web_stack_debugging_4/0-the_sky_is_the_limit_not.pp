@@ -1,13 +1,6 @@
-# Raise Nginx's open-file limit so it can handle high concurrency
+# Raise Nginx's open-file limit and make sure Nginx is running afterwards
 exec { 'fix--for-nginx':
-  command => 'sed -i "s/15/4096/" /etc/default/nginx',
-  path    => ['/bin', '/usr/bin', '/usr/sbin'],
-}
-
-# Restart Nginx so the new limit takes effect
-exec { 'restart-nginx':
-  command     => 'service nginx restart',
-  path        => ['/bin', '/usr/bin', '/usr/sbin'],
-  subscribe   => Exec['fix--for-nginx'],
-  refreshonly => true,
+  command  => 'sed -i "s/^ULIMIT=.*/ULIMIT=\"-n 4096\"/" /etc/default/nginx; service nginx stop; sleep 2; service nginx start; sleep 2',
+  path     => ['/usr/local/bin', '/usr/bin', '/usr/sbin', '/bin', '/sbin'],
+  provider => shell,
 }
