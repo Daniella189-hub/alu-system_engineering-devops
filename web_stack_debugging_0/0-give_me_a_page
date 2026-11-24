@@ -2,5 +2,5 @@
 # this is task 0 opf debugging
 
 sudo service apache2 status
-sudo service apache2 restart
+sudo service apache2 start
 curl localhost
