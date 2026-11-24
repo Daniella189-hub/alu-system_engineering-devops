@@ -1,6 +1,3 @@
 #!/usr/bin/env bash
-# this is task 0 opf debugging
-
-sudo service apache2 status
-sudo service apache2 start
-curl localhost
+# Start Apache so the web server serves the page
+service apache2 start
